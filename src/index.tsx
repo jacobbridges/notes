@@ -9,7 +9,7 @@ let contentTest = {
   home: `This is a simple note taking app.
 
 Prepend any world with @ to create a new page, like @this.
-  
+
 The entire page is editable, apart from the Home link at the top.`,
   this: `Isn't this easy?`
 };
@@ -30,9 +30,10 @@ const Home = ({ match }) => EditableDiv("home");
 
 const Page = ({ match }) => EditableDiv(match.params.pageId);
 
-const simpleRender = (text: string) => {
+const simpleRender = (text: string): any[] => {
   const components = _.map(text.split(/(@\w+)/), (a: string) =>
     a.startsWith("@") ? (
+      // @ts-ignore
       <Link
         contenteditable="false"
         to={"/p/" + a.slice(1)}
@@ -48,7 +49,7 @@ const simpleRender = (text: string) => {
 };
 
 const EditableDiv = (name?: string) => {
-  const id = _.snakeCase(name || Date.now());
+  const id = _.snakeCase(name || Date.now().toString());
   const initialContent = _.get(contentTest, name, "Type @here...");
   const [content, setContent] = useState(initialContent);
   const [editing, setEditing] = useState(false);
