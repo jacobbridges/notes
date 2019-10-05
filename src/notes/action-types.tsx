@@ -1,0 +1,1 @@
+export const SET_NOTE = 'notes:SET_NOTE'

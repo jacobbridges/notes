@@ -12,6 +12,7 @@ import { setUser } from './auth/actions'
 import ForceAuth from './auth/ForceAuth'
 import UserBar from './user-bar/user-bar'
 import {ThemeProvider} from 'styled-components'
+import EditableDiv from './editable-div'
 import * as theme from './config/theme'
 import "normalize.css";
 import "./styles.css";
@@ -84,68 +85,9 @@ const App = () => (
   </ThemeProvider>
 );
 
-const Home = ({ match }) => EditableDiv("home");
+const Home = ({ match }) => <EditableDiv name="home"/>
 
-const Page = ({ match }) => EditableDiv(match.params.pageId);
-
-const simpleRender = (text: string): any[] => {
-  const components = _.map(text.split(/(@\w+)/), (a: string) =>
-    a.startsWith("@") ? (
-      // @ts-ignore
-      <Link
-        contenteditable="false"
-        to={"/p/" + a.slice(1)}
-        onFocus={e => e.stopPropagation()}
-      >
-        {a}
-      </Link>
-    ) : (
-      a
-    )
-  );
-  return components;
-};
-
-
-const EditableDiv = (name?: string) => {
-  const id = _.snakeCase(name || Date.now().toString());
-  const initialContent = _.get(contentTest, name, "Type @here...");
-  const [content, setContent] = useState(initialContent);
-  const [editing, setEditing] = useState(false);
-  const editableDiv = useRef(null);
-
-  const handleBlur = e => {
-    setEditing(false);
-    setContent(editableDiv.current.innerText);
-    _.set(contentTest, name, editableDiv.current.innerText);
-  };
-
-  return (
-    <div
-      id={id}
-      ref={editableDiv}
-      contentEditable
-      style={{
-        fontFamily: "inherit",
-        outline: "none",
-        maxWidth: "100%",
-        width: "100%",
-        whiteSpace: "pre-wrap",
-        wordBreak: "break-word",
-        caretColor: "rgba(0, 0, 0, 0.9)",
-        padding: "3px 2px",
-        minHeight: "1em",
-        color: "rgba(0, 0, 0, 0.9)"
-      }}
-      onFocus={e => setEditing(true)}
-      onBlur={handleBlur}
-    >
-      {editing
-        ? _.get(contentTest, name, "Type @here...")
-        : simpleRender(_.get(contentTest, name, "Type @here..."))}
-    </div>
-  );
-};
+const Page = ({ match }) => <EditableDiv name={match.params.pageId}/>;
 
 const rootElement = document.getElementById("root");
 render(<App />, rootElement);
