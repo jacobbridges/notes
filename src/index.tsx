@@ -34,36 +34,6 @@ firebase.initializeApp(config);
 firebase.analytics();
 firebase.auth().onAuthStateChanged( user => store.dispatch(setUser(user)))
 
-// @ts-ignore
-window.fire = firebase
-
-
-function Success(props: any){
-  const [user, setUser] = React.useState(null)
-
-  React.useEffect(() => {
-    const unmountAuthObserver = firebase.auth().onAuthStateChanged(
-      (user) => setUser(user)
-    )
-    return () => unmountAuthObserver()
-  }, [])
-  return (
-    <div>
-      <p>Welcome {user && user.displayName}! You are now signed-in!</p>
-      <a onClick={() => firebase.auth().signOut()}>Sign-out</a>
-    </div>
-  )
-}
-
-
-let contentTest = {
-  home: `This is a simple note taking app.
-
-Prepend any world with @ to create a new page, like @this.
-
-The entire page is editable, apart from the Home link at the top.`,
-  this: `Isn't this easy?`
-};
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -75,7 +45,6 @@ const App = () => (
             <div style={{ paddingBottom: "1rem" }}>
               <Link to="/">Home</Link>
             </div>
-            <Route exact={true} path="/signedIn" component={Success}/>
             <Route exact={true} path="/" component={Home} />
             <Route path="/p/:pageId" component={Page} />
           </ConnectedRouter>
