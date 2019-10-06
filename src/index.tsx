@@ -34,9 +34,6 @@ firebase.initializeApp(config);
 firebase.analytics();
 firebase.auth().onAuthStateChanged( user => store.dispatch(setUser(user)))
 
-// @ts-ignore
-window.fire = firebase
-
 
 const App = () => (
   <ThemeProvider theme={theme}>
