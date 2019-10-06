@@ -16,10 +16,20 @@ const EditableDiv = ({
     const [editing, setEditing] = React.useState(false);
     const editableDiv = React.useRef(null);
 
-    const handleBlur = e => {
+    const persistEdit = () => {
         setEditing(false);
         setContent(editableDiv.current.innerText);
+    }
+
+    const handleBlur = e => {
+        persistEdit()
     };
+
+    const handleKeyDown = e => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            persistEdit()
+        }
+    }
 
     return (
         <div
@@ -40,6 +50,7 @@ const EditableDiv = ({
         }}
         onFocus={e => setEditing(true)}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         >
         {editing
             ? content
