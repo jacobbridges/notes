@@ -12,13 +12,15 @@ const EditableDiv = ({
     content = defaultContent,
     setContent,
 }) => {
-    // const [content, setContent] = React.useState(initialContent);
-    const [editing, setEditing] = React.useState(false);
-    const editableDiv = React.useRef(null);
+    const [editing, setEditing] = React.useState(false)
+    const editableDiv = React.useRef(null)
 
     const persistEdit = () => {
-        setEditing(false);
-        setContent(editableDiv.current.innerText);
+        const newContent = editableDiv.current.innerText
+        setEditing(false)
+        if (newContent !== content) {
+            setContent(editableDiv.current.innerText)
+        }
     }
 
     const handleBlur = e => {
@@ -26,6 +28,9 @@ const EditableDiv = ({
     };
 
     const handleKeyDown = e => {
+        if (e.key === 'Escape') {
+            setEditing(false)
+        }
         if (e.ctrlKey && e.key === 'Enter') {
             persistEdit()
         }
