@@ -24,6 +24,10 @@ const EditableDiv = ({
     note,
     setContent,
 }) => {
+    const {
+        id = null,
+        content = defaultContent,
+    } = note || {}
     const [editing, setEditing] = React.useState(false)
     const editableDiv = React.useRef(null)
 
@@ -31,7 +35,7 @@ const EditableDiv = ({
         const newContent = editableDiv.current.innerText
         setEditing(false)
         if (newContent !== content) {
-            setContent(editableDiv.current.innerText)
+            setContent(id, editableDiv.current.innerText)
         }
     }
 
@@ -42,9 +46,11 @@ const EditableDiv = ({
     const handleKeyDown = e => {
         if (e.key === 'Escape') {
             setEditing(false)
+            document.body.focus()
         }
         if (e.ctrlKey && e.key === 'Enter') {
             persistEdit()
+            document.body.focus()
         }
     }
 
