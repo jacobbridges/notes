@@ -6,6 +6,11 @@ import {setNote} from '../notes/actions'
 import SimpleRender from './simple-render'
 import styled from 'styled-components'
 
+const Wrap = styled.div`
+    outline: none;
+    width: 100%;
+`
+
 const Text = styled.div`
     outline: none;
     width: 100%;
@@ -24,32 +29,59 @@ const EditableDiv = ({
     note,
     setContent,
 }) => {
-    // const [content, setContent] = React.useState(initialContent);
-    const [editing, setEditing] = React.useState(false);
-    const editableDiv = React.useRef(null);
     const {
         id = null,
         content = defaultContent,
     } = note || {}
+    const [editing, setEditing] = React.useState(false)
+    const noteStart = React.useRef(null)
+    const editableDiv = React.useRef(null)
+
+    const persistEdit = () => {
+        const newContent = editableDiv.current.innerText
+        setEditing(false)
+        if (newContent !== content) {
+            setContent(id, editableDiv.current.innerText)
+        }
+    }
+
+    const resetFocus = () => {
+        noteStart.current.focus()
+    }
 
     const handleBlur = e => {
-        setEditing(false);
-        setContent(id, editableDiv.current.innerText);
+        persistEdit()
     };
 
+    const handleKeyDown = e => {
+        if (e.key === 'Escape') {
+            setEditing(false)
+            resetFocus()
+            return false
+        }
+        if (e.ctrlKey && e.key === 'Enter') {
+            persistEdit()
+            resetFocus()
+            return false
+        }
+    }
+
     return (
-        <Text
-            id={name}
-            ref={editableDiv}
-            contentEditable
-            onFocus={e => setEditing(true)}
-            onBlur={handleBlur}
-            suppressContentEditableWarning={true}
-        >
-        {editing
-            ? content
-            : <SimpleRender text={content}/>}
-        </Text>
+        <Wrap ref={noteStart} tabIndex={0}>
+            <Text
+                id={name}
+                ref={editableDiv}
+                contentEditable
+                onFocus={e => setEditing(true)}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                suppressContentEditableWarning={true}
+            >
+            {editing
+                ? content
+                : <SimpleRender text={content}/>}
+            </Text>
+        </Wrap>
     );
 };
 
