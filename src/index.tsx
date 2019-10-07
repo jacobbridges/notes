@@ -11,11 +11,12 @@ import { Login } from "./auth/Login";
 import { setUser } from './auth/actions'
 import ForceAuth from './auth/ForceAuth'
 import UserBar from './user-bar/user-bar'
-import {ThemeProvider} from 'styled-components'
+import styled, {ThemeProvider} from 'styled-components'
 import EditableDiv from './editable-div'
 import * as theme from './config/theme'
+import { createGlobalStyle } from "styled-components"
+
 import "normalize.css";
-import "./styles.css";
 
 const store = configureStore({}, history)
 
@@ -35,21 +36,32 @@ firebase.analytics();
 firebase.auth().onAuthStateChanged( user => store.dispatch(setUser(user)))
 
 
+const GlobalStyle = createGlobalStyle`
+  @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
+
+  * {
+    box-sizing: border-box;
+  }
+`
+
+const Wrap = styled.div`
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+`
+
 const App = () => (
   <ThemeProvider theme={theme}>
     <Provider store={store}>
-      <div className={"App"}>
+      <Wrap>
+        <GlobalStyle/>
         <ForceAuth>
           <UserBar/>
           <ConnectedRouter history={history}>
-            <div style={{ paddingBottom: "1rem" }}>
-              <Link to="/">Home</Link>
-            </div>
             <Route exact={true} path="/" component={Home} />
             <Route path="/p/:pageId" component={Page} />
           </ConnectedRouter>
         </ForceAuth>
-      </div>
+      </Wrap>
     </Provider>
   </ThemeProvider>
 );
