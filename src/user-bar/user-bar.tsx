@@ -4,11 +4,13 @@ import * as userSelectors from '../auth/selectors'
 import firebase from 'firebase'
 import styled from 'styled-components'
 import {rgba} from 'polished'
+import NoteSearch from '../notes/note-search'
 
 const TopBar = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: row-reverse;
+    padding: 5px;
+    flex-direction: row;
 `
 
 const LogoutButton = styled.button`
@@ -41,6 +43,7 @@ const Avatar = styled.img`
 
 const UserBar = ({user}) => (
     <TopBar>
+        <NoteSearch/>
         <LogoutButton onClick={() => firebase.auth().signOut()}>
             <Avatar src={user.photoURL}/>
             <div>Logout</div>
