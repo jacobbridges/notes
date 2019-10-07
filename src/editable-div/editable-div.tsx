@@ -6,6 +6,11 @@ import {setNote} from '../notes/actions'
 import SimpleRender from './simple-render'
 import styled from 'styled-components'
 
+const Wrap = styled.div`
+    outline: none;
+    width: 100%;
+`
+
 const Text = styled.div`
     outline: none;
     width: 100%;
@@ -29,6 +34,7 @@ const EditableDiv = ({
         content = defaultContent,
     } = note || {}
     const [editing, setEditing] = React.useState(false)
+    const noteStart = React.useRef(null)
     const editableDiv = React.useRef(null)
 
     const persistEdit = () => {
@@ -39,6 +45,10 @@ const EditableDiv = ({
         }
     }
 
+    const resetFocus = () => {
+        noteStart.current.focus()
+    }
+
     const handleBlur = e => {
         persistEdit()
     };
@@ -46,28 +56,32 @@ const EditableDiv = ({
     const handleKeyDown = e => {
         if (e.key === 'Escape') {
             setEditing(false)
-            document.body.focus()
+            resetFocus()
+            return false
         }
         if (e.ctrlKey && e.key === 'Enter') {
             persistEdit()
-            document.body.focus()
+            resetFocus()
+            return false
         }
     }
 
     return (
-        <Text
-            id={name}
-            ref={editableDiv}
-            contentEditable
-            onFocus={e => setEditing(true)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            suppressContentEditableWarning={true}
-        >
-        {editing
-            ? content
-            : <SimpleRender text={content}/>}
-        </Text>
+        <Wrap ref={noteStart} tabIndex={0}>
+            <Text
+                id={name}
+                ref={editableDiv}
+                contentEditable
+                onFocus={e => setEditing(true)}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                suppressContentEditableWarning={true}
+            >
+            {editing
+                ? content
+                : <SimpleRender text={content}/>}
+            </Text>
+        </Wrap>
     );
 };
 
