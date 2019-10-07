@@ -10,10 +10,10 @@ const initialState = {
     this: `Isn't this easy?`
 };
 
-function handleSetNote(state, {label, content}) {
+function handleSetNote(state, {id, label, content}) {
     return {
         ...state,
-        [snakeCase(label)]: content,
+        [snakeCase(label)]: {id, content},
     }
 }
 

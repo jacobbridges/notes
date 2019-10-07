@@ -9,16 +9,20 @@ const defaultContent = "Type here..."
 
 const EditableDiv = ({
     name,
-    content = defaultContent,
+    note,
     setContent,
 }) => {
     // const [content, setContent] = React.useState(initialContent);
     const [editing, setEditing] = React.useState(false);
     const editableDiv = React.useRef(null);
+    const {
+        id = null,
+        content = defaultContent,
+    } = note || {}
 
     const handleBlur = e => {
         setEditing(false);
-        setContent(editableDiv.current.innerText);
+        setContent(id, editableDiv.current.innerText);
     };
 
     return (
@@ -51,12 +55,12 @@ const EditableDiv = ({
 const mapStateToProps = (state, ownProps) => {
     const getContentByLabel = makeGetNoteByLabel(ownProps.name)
     return {
-        content: getContentByLabel(state)
+        note: getContentByLabel(state),
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    setContent: (content) => setNote(ownProps.name, content),
+    setContent: (id, content) => setNote({label: ownProps.name, id, content}),
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditableDiv)

@@ -4,15 +4,16 @@
 
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
-// import createSagaMiddleware from 'redux-saga';
+import createSagaMiddleware from 'redux-saga';
 import createReducer from './root-reducer';
+import rootSaga from './root-saga'
 
-// const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [routerMiddleware(history)];
+  const middlewares = [sagaMiddleware, routerMiddleware(history)];
 
   const enhancers = [applyMiddleware(...middlewares)];
 
@@ -30,9 +31,9 @@ export default function configureStore(initialState = {}, history) {
   /* eslint-enable */
 
   const store = createStore(createReducer(), initialState, composeEnhancers(...enhancers));
+  sagaMiddleware.run(rootSaga)
 
   // Extensions
-  //   store.runSaga = sagaMiddleware.run;
   // @ts-ignore
   // store.injectedReducers = {}; // Reducer registry
   // store.injectedSagas = {}; // Saga registry
