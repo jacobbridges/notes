@@ -26,11 +26,25 @@ const customStyles = {
 
 
 const NoteSearch = ({paths, navigate}) => {
+    const search = React.useRef(null)
     const options = paths.map(path => ({value: path.path, label: `@${path.label}`}))
+
+    React.useEffect(() => {
+        const callback = (evt) => {
+          if (evt.shiftKey && evt.ctrlKey && evt.key === 'F') {
+            search.current.focus()
+          }
+        }
+        document.addEventListener('keydown', callback)
+        return () => {
+          document.removeEventListener('keydown', callback)
+        }
+      }, [])
 
     return (
         <Wrap>
             <Select
+                ref={search}
                 value=''
                 onChange={(option) => navigate(option.value)} 
                 options={options}
