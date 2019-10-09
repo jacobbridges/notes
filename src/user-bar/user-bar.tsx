@@ -19,8 +19,8 @@ const LogoutButton = styled.button`
     border-radius: 3px;
     border: none;
     cursor: pointer;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    margin-left: 4px;
+    padding: 4px;
     transition: color 80ms, background-color 80ms;
     color: ${({theme}) => theme.black};
     background-color: ${({theme}) => rgba(theme.primary, 0)}; 

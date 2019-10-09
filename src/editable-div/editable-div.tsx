@@ -13,6 +13,7 @@ const Wrap = styled.div`
 
 const Text = styled.div`
     outline: none;
+    display: inline-block;
     width: 100%;
     white-space: pre-wrap;
     word-break: break-word;
@@ -37,16 +38,26 @@ const EditableDiv = ({
     const noteStart = React.useRef(null)
     const editableDiv = React.useRef(null)
 
+    const resetFocus = () => {
+        noteStart.current.focus()
+    }
+
+    React.useEffect(()=>{
+        const handler = (event) => {
+            if (event.target !== editableDiv.current) {
+                resetFocus()
+            }
+        }
+        document.addEventListener('click', handler)
+        return () => document.removeEventListener('click', handler)
+    },[])
+
     const persistEdit = () => {
         const newContent = editableDiv.current.innerText
         setEditing(false)
         if (newContent !== content) {
-            setContent(id, editableDiv.current.innerText)
+            setContent(id, newContent)
         }
-    }
-
-    const resetFocus = () => {
-        noteStart.current.focus()
     }
 
     const handleBlur = e => {
@@ -75,6 +86,7 @@ const EditableDiv = ({
                 onFocus={e => setEditing(true)}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
+                onKeyUp={()=>console.log(editableDiv.current.innerHTML)}
                 suppressContentEditableWarning={true}
             >
             {editing
