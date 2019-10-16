@@ -43,6 +43,9 @@ const EditableDiv = ({
     }
 
     React.useEffect(()=>{
+        if (!editing){
+            return
+        }
         const handler = (event) => {
             if (event.target !== editableDiv.current) {
                 resetFocus()
@@ -50,7 +53,7 @@ const EditableDiv = ({
         }
         document.addEventListener('click', handler)
         return () => document.removeEventListener('click', handler)
-    },[])
+    },[editing])
 
     const persistEdit = () => {
         const newContent = editableDiv.current.innerText
